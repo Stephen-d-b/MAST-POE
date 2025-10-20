@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -27,6 +27,7 @@ export default function DishListApp() {
   const [course, setCourse] = useState("Starter");
   const [price, setPrice] = useState("");
   const [dishes, setDishes] = useState<Dish[]>([]);
+  const [dishCount, setDishCount] = useState(0); // ✅ Counter state
 
   // Add a new dish
   const addDish = () => {
@@ -40,43 +41,18 @@ export default function DishListApp() {
     };
     setDishes((prev) => [...prev, newDish]);
     // Reset form
+    setDishCount((prev) => prev + 1); // ✅ Increase counter
     setDishName("");
     setDescription("");
     setCourse("Starter");
     setPrice("");
   };
-
-  // Remove a dish by tapping on it
+// Remove a dish by tapping on it
   const removeDish = (id: string) => {
     setDishes((prev) => prev.filter((dish) => dish.id !== id));
+    setDishCount((prev) => Math.max(prev - 1, 0)); // ✅ Decrease counter (no negatives)
   };
 
-  // Sorting order definition (so “Starters” always appear first, etc.)
-  const order = ["Starter", "Main Course", "Dessert", "Drink"];
-
-  // Sort dishes in display order + count how many are in each category
-  const { sortedDishes, categoryCounts } = useMemo(() => {
-    // Sort dishes by course order
-    const sorted = [...dishes].sort(
-      (a, b) => order.indexOf(a.course) - order.indexOf(b.course)
-    );
-
-    // Count per category
-    const counts = {
-      Starter: 0,
-      "Main Course": 0,
-      Dessert: 0,
-      Drink: 0,
-    };
-    sorted.forEach((dish) => counts[dish.course as keyof typeof counts]++);
-
-    return { sortedDishes: sorted, categoryCounts: counts };
-  }, [dishes]);
-
-  // Calculate total dishes (just length of array)
-  const totalDishes = dishes.length;
-
-  // Render each dish card
   const renderDish = ({ item }: { item: Dish }) => (
     <TouchableOpacity
       style={styles.card}
@@ -101,7 +77,6 @@ export default function DishListApp() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>🍽️ Cristoffel Private Chef's</Text>
 
-        {/* 📋 Dish entry form */}
         <View style={styles.form}>
           <TextInput
             style={styles.input}
@@ -142,36 +117,19 @@ export default function DishListApp() {
           </TouchableOpacity>
         </View>
 
-        {/*Total + Category breakdown */}
+        {/* ✅ Counter Display */}
         <View style={styles.counterContainer}>
           <Text style={styles.counterLabel}>Total Dishes:</Text>
-          <Text style={styles.counterNumber}>{totalDishes}</Text>
-        </View>
-
-        {/* 🧮 Category Counters */}
-        <View style={styles.categoryContainer}>
-          <Text style={styles.categoryText}>
-            🥗 Starters: <Text style={styles.categoryCount}>{categoryCounts.Starter}</Text>
-          </Text>
-          <Text style={styles.categoryText}>
-            🍝 Mains: <Text style={styles.categoryCount}>{categoryCounts["Main Course"]}</Text>
-          </Text>
-          <Text style={styles.categoryText}>
-            🍰 Desserts: <Text style={styles.categoryCount}>{categoryCounts.Dessert}</Text>
-          </Text>
-          <Text style={styles.categoryText}>
-            🍹 Drinks: <Text style={styles.categoryCount}>{categoryCounts.Drink}</Text>
-          </Text>
+          <Text style={styles.counterNumber}>{dishCount}</Text>
         </View>
 
         <Text style={styles.subtitle}>📋 Added Dishes</Text>
 
-        {/* 🧾 Display sorted dishes */}
-        {sortedDishes.length === 0 ? (
+        {dishes.length === 0 ? (
           <Text style={styles.emptyText}>No dishes added yet 🍛</Text>
         ) : (
           <FlatList
-            data={sortedDishes}
+            data={dishes}
             renderItem={renderDish}
             keyExtractor={(item) => item.id}
             scrollEnabled={false}
@@ -183,7 +141,6 @@ export default function DishListApp() {
   );
 }
 
-// 💅 Styles
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
@@ -254,50 +211,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  counterContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 8,
-    backgroundColor: "#fff",
-    paddingVertical: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-  counterLabel: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-    marginRight: 8,
-  },
-  counterNumber: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#007AFF",
-  },
-  categoryContainer: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 1,
-  },
-  categoryText: {
-    fontSize: 16,
-    color: "#333",
-    marginVertical: 2,
-  },
-  categoryCount: {
-    fontWeight: "bold",
-    color: "#007AFF",
-  },
   card: {
     backgroundColor: "#fff",
     padding: 18,
@@ -345,5 +258,29 @@ const styles = StyleSheet.create({
     color: "#777",
     fontStyle: "italic",
     fontSize: 16,
+  },
+  counterContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    backgroundColor: "#fff",
+    paddingVertical: 10,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+  counterLabel: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+    marginRight: 8,
+  },
+  counterNumber: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#007AFF",
   },
 });
