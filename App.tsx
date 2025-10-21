@@ -145,20 +145,20 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     padding: 20,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#36393e",
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
-    color: "#333",
+    color: "white",
   },
   subtitle: {
     fontSize: 20,
     fontWeight: "600",
     marginVertical: 10,
-    color: "#333",
+    color: "#ffffffff",
   },
   form: {
     backgroundColor: "#fff",
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: "bold",
     fontSize: 18,
-    color: "#333",
+    color: "#3b3b3bff",
   },
   price: {
     fontWeight: "bold",
@@ -237,14 +237,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   description: {
-    color: "#666",
+    color: "#3b3b3bff",
     marginTop: 6,
     marginBottom: 6,
     fontSize: 14,
   },
   course: {
     fontStyle: "italic",
-    color: "#555",
+    color: "#3b3b3bff",
   },
   tapHint: {
     marginTop: 5,
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   emptyText: {
     textAlign: "center",
     marginTop: 20,
-    color: "#777",
+    color: "#ffffffff",
     fontStyle: "italic",
     fontSize: 16,
   },
