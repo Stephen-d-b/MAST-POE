@@ -7,8 +7,6 @@ import {
   FlatList,
   StyleSheet,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
@@ -70,10 +68,7 @@ export default function DishListApp() {
   );
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      style={{ flex: 1 }}
-    >
+    
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>🍽️ Cristoffel Private Chef's</Text>
 
@@ -137,7 +132,7 @@ export default function DishListApp() {
           />
         )}
       </ScrollView>
-    </KeyboardAvoidingView>
+    
   );
 }
 
